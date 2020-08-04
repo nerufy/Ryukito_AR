@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25519F3E24D88C80002502F8 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25519F3D24D88C80002502F8 /* MenuViewController.swift */; };
+		25519F4024D9A8BD002502F8 /* vsCPU.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25519F3F24D9A8BD002502F8 /* vsCPU.storyboard */; };
 		25BEA60D24D2814800673098 /* kinkyu.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 25BEA60C24D2814800673098 /* kinkyu.mp3 */; };
 		D5EE322E24A5C5C8000A73B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EE322D24A5C5C8000A73B3 /* AppDelegate.swift */; };
 		D5EE323024A5C5C8000A73B3 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D5EE322F24A5C5C8000A73B3 /* art.scnassets */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25519F3D24D88C80002502F8 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		25519F3F24D9A8BD002502F8 /* vsCPU.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = vsCPU.storyboard; sourceTree = "<group>"; };
 		25BEA60C24D2814800673098 /* kinkyu.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = kinkyu.mp3; path = ../../kinkyu.mp3; sourceTree = "<group>"; };
 		D5EE322A24A5C5C8000A73B3 /* Ryukito_AR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ryukito_AR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5EE322D24A5C5C8000A73B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,13 +105,15 @@
 		D5EE322C24A5C5C8000A73B3 /* Ryukito_AR */ = {
 			isa = PBXGroup;
 			children = (
-				D5EE322D24A5C5C8000A73B3 /* AppDelegate.swift */,
 				D5EE322F24A5C5C8000A73B3 /* art.scnassets */,
+				D5EE323824A5C5CB000A73B3 /* LaunchScreen.storyboard */,
+				D5EE322D24A5C5C8000A73B3 /* AppDelegate.swift */,
+				D5EE323324A5C5C8000A73B3 /* Main.storyboard */,
+				25519F3D24D88C80002502F8 /* MenuViewController.swift */,
+				25519F3F24D9A8BD002502F8 /* vsCPU.storyboard */,
 				D5EE323124A5C5C8000A73B3 /* ViewController.swift */,
 				25BEA60C24D2814800673098 /* kinkyu.mp3 */,
-				D5EE323324A5C5C8000A73B3 /* Main.storyboard */,
 				D5EE323624A5C5CB000A73B3 /* Assets.xcassets */,
-				D5EE323824A5C5CB000A73B3 /* LaunchScreen.storyboard */,
 				D5EE323B24A5C5CB000A73B3 /* Info.plist */,
 			);
 			path = Ryukito_AR;
@@ -240,6 +246,7 @@
 				D5EE323A24A5C5CB000A73B3 /* LaunchScreen.storyboard in Resources */,
 				D5EE323724A5C5CB000A73B3 /* Assets.xcassets in Resources */,
 				D5EE323524A5C5C8000A73B3 /* Main.storyboard in Resources */,
+				25519F4024D9A8BD002502F8 /* vsCPU.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5EE323224A5C5C8000A73B3 /* ViewController.swift in Sources */,
+				25519F3E24D88C80002502F8 /* MenuViewController.swift in Sources */,
 				D5EE322E24A5C5C8000A73B3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="bSy-uj-EN5">
+            <objects>
+                <viewController storyboardIdentifier="ViewController" modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nnu-dA-SJ8" customClass="ViewController" customModule="Ryukito_AR" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="C8j-1d-T4c">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dC3-0m-Gvv">
+                                <rect key="frame" x="0.0" y="34" width="414" height="862"/>
+                            </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aug-1h-Yj3">
+                                <rect key="frame" x="168" y="771" width="77" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <gestureRecognizers/>
+                                <state key="normal" title="マシンガン"/>
+                                <connections>
+                                    <action selector="TapDown:" destination="Nnu-dA-SJ8" eventType="touchDown" id="w5Q-8Y-9FX"/>
+                                    <action selector="TapUp:" destination="Nnu-dA-SJ8" eventType="touchUpInside" id="oRJ-8i-3AF"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="未検知" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Xw-XG-AjY">
+                                <rect key="frame" x="25" y="66" width="364" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AXz-yh-XmF">
+                                <rect key="frame" x="33" y="73" width="86" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="一人で遊ぶ"/>
+                                <connections>
+                                    <action selector="GoVSCPU:" destination="Nnu-dA-SJ8" eventType="touchUpInside" id="fCP-Gb-dKN"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJ3-hf-ygN">
+                                <rect key="frame" x="169" y="727" width="76" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <state key="normal" title="発射"/>
+                                <connections>
+                                    <action selector="shot:" destination="Nnu-dA-SJ8" eventType="touchDown" id="00n-lo-Mhd"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="dC3-0m-Gvv" firstAttribute="top" secondItem="C8j-1d-T4c" secondAttribute="top" id="2dg-zK-bvm"/>
+                            <constraint firstItem="dC3-0m-Gvv" firstAttribute="bottom" secondItem="898-qu-r54" secondAttribute="bottom" id="4GO-Xe-EHX"/>
+                            <constraint firstItem="dC3-0m-Gvv" firstAttribute="trailing" secondItem="898-qu-r54" secondAttribute="trailing" id="N7G-Ze-uA8"/>
+                            <constraint firstItem="dC3-0m-Gvv" firstAttribute="leading" secondItem="898-qu-r54" secondAttribute="leading" id="Zqb-9N-lv3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="898-qu-r54"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="1GQ-Lv-Bly"/>
+                    <connections>
+                        <outlet property="sceneView" destination="dC3-0m-Gvv" id="tMQ-bc-CYC"/>
+                        <outlet property="testlab" destination="9Xw-XG-AjY" id="SGe-jy-GzB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ojr-TO-uTS" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="sf3-5J-E7h"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="fg2-8Z-H6l">
+                    <connections>
+                        <action selector="longtap:" destination="Nnu-dA-SJ8" id="rxh-An-PHA"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="109.82142857142857"/>
+        </scene>
+    </scenes>
+</document>

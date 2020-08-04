@@ -41,6 +41,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             print("Error \(error.localizedDescription)")
         }
         audioPlayer.delegate = self
+        audioPlayer.numberOfLoops = -1   // ループ再生する
         audioPlayer.prepareToPlay()
         //再生する
         audioPlayer.play()
@@ -56,7 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         scene.physicsWorld.contactDelegate = self
         
         CreateObj(0,1,-2.3,0,255,255,1,"target1")
-        CreateObj(-0.3,1,-2.0,255,255,255,1,"target2")
+        CreateObj(-0.3,1,-2.0,0,255,255,1,"target2")
         CreateObj(0.3,1,-2.0,0,255,255,1,"target3")
         //CreateObj(0,1,-2.0)
         //CreateObj(0,1,-1.7)
@@ -88,6 +89,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         
     }
+    
     @IBOutlet weak var testlab: UILabel!
     
     func CreateTarget(_ positionX: Float,_ positionY: Float,_ positionZ: Float) {
@@ -95,7 +97,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         let TargetScene = SCNScene(named: "art.scnassets/chair.scn")!
         let TargetNode = TargetScene.rootNode.childNode(withName: "Cube-002", recursively: true)
         TargetNode?.position = SCNVector3(positionX, positionY, positionZ)
-        TargetNode?.scale = SCNVector3(0.01, 0.01, 0.01)
+        TargetNode?.scale = SCNVector3(1, 1, 1)
         
         let physicsShape = SCNPhysicsShape(node: TargetNode!, options: nil)
         let TargetBody = SCNPhysicsBody(type: .dynamic, shape: nil)
@@ -234,6 +236,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     }
     @IBAction func TapUp(_ sender: Any) {
         self.timer?.invalidate()
+    }
+    
+    @IBAction func GoVSCPU(_ sender: Any) {
+        
     }
     
     //接触を検知したらテキストを表示
