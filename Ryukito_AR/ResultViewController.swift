@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController: UIViewController {
+class ResultViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,16 +17,15 @@ class MenuViewController: UIViewController {
     }
     
     
-    @IBAction func GoVsCPU(_ sender: Any) {
+    
+    @IBAction func GoMenu(_ sender: Any) {
         //Storyboardを指定
-        let storyboard = UIStoryboard(name: "vsCPU", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         //生成するViewControllerを指定
-        let next = storyboard.instantiateViewController(withIdentifier: "ViewController")
+        let next = storyboard.instantiateViewController(withIdentifier: "MenuViewController")
         //表示
         self.present(next, animated: true)
     }
-    
-    
     
 
     /*
@@ -40,3 +39,4 @@ class MenuViewController: UIViewController {
     */
 
 }
+

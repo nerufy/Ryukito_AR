@@ -35,14 +35,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AXz-yh-XmF">
-                                <rect key="frame" x="33" y="73" width="86" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="一人で遊ぶ"/>
-                                <connections>
-                                    <action selector="GoVSCPU:" destination="Nnu-dA-SJ8" eventType="touchUpInside" id="fCP-Gb-dKN"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJ3-hf-ygN">
                                 <rect key="frame" x="169" y="727" width="76" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -65,7 +57,7 @@
                     <navigationItem key="navigationItem" id="1GQ-Lv-Bly"/>
                     <connections>
                         <outlet property="sceneView" destination="dC3-0m-Gvv" id="tMQ-bc-CYC"/>
-                        <outlet property="testlab" destination="9Xw-XG-AjY" id="SGe-jy-GzB"/>
+                        <outlet property="testlab" destination="9Xw-XG-AjY" id="Od0-Cj-e6N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ojr-TO-uTS" sceneMemberID="firstResponder"/>
