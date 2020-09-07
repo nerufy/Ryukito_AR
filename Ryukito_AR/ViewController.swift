@@ -23,6 +23,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBOutlet var sceneView: ARSCNView!
     var audioPlayer: AVAudioPlayer!
     
+    @IBOutlet weak var shotButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         // 再生する audio ファイルのパスを取得
@@ -56,8 +57,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         //let scene = SCNScene()
         sceneView.scene.physicsWorld.contactDelegate = self
         
-        setFloor()
-        enemy(0, 1.0, -5, 0, 0, 0, 1, "enemy1")
+        // スクリーンの横縦幅
+        //let screenWidth:CGFloat = self.view.frame.width
+        //let screenHeight:CGFloat = self.view.frame.height
+        shotButton.frame = CGRect(x: 0, y: 0, width: 100, height: 100)  // 1
+               //shotButton.center = self.view.center  // 2
+        shotButton.layer.position = CGPoint(x: self.view.frame.width/2, y:600)
+               
+        shotButton.backgroundColor = .red  // 3
+        shotButton.setTitleColor(UIColor.white, for: UIControl.State.normal)  // 4
+        
+        shotButton.layer.borderWidth = 1  // 5
+        shotButton.layer.borderColor = UIColor.black.cgColor  // 6
+        
+        shotButton.layer.cornerRadius = 50  // 7
+               
+        shotButton.layer.shadowOffset = CGSize(width: 3, height: 3 )  // 8
+        shotButton.layer.shadowOpacity = 0.5  // 9
+        shotButton.layer.shadowRadius = 10  // 10
+        shotButton.layer.shadowColor = UIColor.gray.cgColor  // 11
+        
+        enemy(-5, 1.0, -5, 0, 0, 0, 1, "enemy1")
     }
     
     var Targets = 0
@@ -87,41 +107,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         //Body情報をノードにセット
         enemyNode.physicsBody = sphereBody
+        
+            //着弾まで?秒間かかるアニメーション
+        let enemymoving = SCNAction.move(by: SCNVector3(5, 1.0, -5), duration: TimeInterval(5))
+        let enemystoping = SCNAction.wait(duration: 0.5)
+        enemyNode.runAction(
+            SCNAction.repeatForever(
+                SCNAction.sequence([
+                    enemymoving,
+                    enemystoping,
+                    enemymoving.reversed()
+                ])
+            )
+        )
+
+
         //AR空間に球体を追加
         sceneView.scene.rootNode.addChildNode(enemyNode)
     }
 
     
-    
-    func setFloor() {
-        let floor = SCNFloor()
-        floor.reflectivity = 0.1
-        let floorNode = SCNNode(geometry: floor)
-        floorNode.position = SCNVector3(0,-1,0)
-        floorNode.name = "floor"
-        
-        //マテリアル
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.clear
-        floor.materials = [material]
-        
-        //Body情報を設定 --物理設定
-        let floorShape = SCNPhysicsShape(geometry: floor, options: nil)
-        let floorBody = SCNPhysicsBody(type: .kinematic, shape: nil)
-        floorBody.restitution = 1.0
-        floorBody.physicsShape = floorShape
-        floorNode.physicsBody?.isAffectedByGravity = false
-        
-        //接触を検知する処理
-        floorBody.contactTestBitMask = 0
-        floorBody.collisionBitMask = 1
-        floorBody.categoryBitMask = 1
-        
-        //Body情報をノードにセット
-        floorNode.physicsBody = floorBody
-        //AR空間に球体を追加
-        sceneView.scene.rootNode.addChildNode(floorNode)
-       }
     
     
     @objc func ShotType(_ BulletSize: Float,_ BulletColor: Any,_ BulletRange: Float,_ BulletVelocity: Double) {
@@ -155,6 +160,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         //着弾後の弾の位置
         let targetPosCamera = SCNVector3Make(0, 0, BulletRange)
         let target = camera.convertPosition(targetPosCamera, to: nil)
+        
+        
         //着弾まで?秒間かかるアニメーション
         let action = SCNAction.move(to: target, duration: TimeInterval(BulletVelocity))
         bulletNode.runAction(action)
@@ -168,6 +175,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
           bulletNode.removeFromParentNode()
         }
     }
+    
     
     // ボタンを押すと弾を発射 --ハンドガン
     @IBAction func shot(_ sender: Any) {

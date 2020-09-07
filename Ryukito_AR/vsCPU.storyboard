@@ -36,12 +36,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJ3-hf-ygN">
-                                <rect key="frame" x="169" y="727" width="76" height="36"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <rect key="frame" x="169" y="653" width="76" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <state key="normal" title="発射"/>
                                 <connections>
-                                    <action selector="shot:" destination="Nnu-dA-SJ8" eventType="touchDown" id="00n-lo-Mhd"/>
+                                    <action selector="shot:" destination="Nnu-dA-SJ8" eventType="touchDown" id="a1o-WB-Hxy"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -57,6 +57,7 @@
                     <navigationItem key="navigationItem" id="1GQ-Lv-Bly"/>
                     <connections>
                         <outlet property="sceneView" destination="dC3-0m-Gvv" id="tMQ-bc-CYC"/>
+                        <outlet property="shotButton" destination="fJ3-hf-ygN" id="Now-2r-YIM"/>
                         <outlet property="testlab" destination="9Xw-XG-AjY" id="Od0-Cj-e6N"/>
                     </connections>
                 </viewController>
