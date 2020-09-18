@@ -75,6 +75,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         shotButton.layer.shadowRadius = 10
         shotButton.layer.shadowColor = UIColor.gray.cgColor
         
+        player()
         enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
         attacker(enemyDate.enemyPositionX, enemyDate.enemyPositionY, enemyDate.enemyPositionZ)
         
@@ -82,6 +83,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     lazy var enemyDate = enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
     var Targets = 0
+    
+    func player() {
+        let playerObj = SCNSphere(radius: 0.5)
+        let playerNode = SCNNode(geometry: playerObj)
+        guard let camera = sceneView.pointOfView else {
+           return
+        }
+        //発射時の弾の位置　--カメラの位置
+        playerNode.position = camera.position
+        playerNode.scale = SCNVector3(0.3, 0.3, 0.3)
+        playerNode.name = "player"
+        
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.red
+        playerObj.materials = [material]
+        
+        //物理情報の設定
+        let playerPhysicsShape = SCNPhysicsShape(node: playerNode, options: nil)
+        let playerSphereBody = SCNPhysicsBody(type: .kinematic, shape: nil)
+        playerSphereBody.restitution = 0
+        playerSphereBody.physicsShape = playerPhysicsShape
+        
+        //接触を検知する処理
+        playerSphereBody.contactTestBitMask = 0
+        playerSphereBody.collisionBitMask = 1
+        playerSphereBody.categoryBitMask = 1
+        //Body情報をノードにセット
+        playerNode.physicsBody = playerSphereBody
+        
+        sceneView.scene.rootNode.addChildNode(playerNode)
+    }
     
     func enemy(_ positionX: Float,_ positionY: Float,_ positionZ: Float,_ red: Int,_ green: Int,_ blue: Int,_ alpha: Int,_ NodeName: String) -> (enemyPositionX: Float, enemyPositionY: Float, enemyPositionZ: Float){
         
@@ -296,15 +328,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var RedColorNo = 0
     var BlueColorNo = 255
     var enemyHP = 82
+    var playerHP = 100
     //接触を検知したらテキストを表示
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
         
+        self.testlab.text = nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + "と"
+        
         if nodeB.name == "Tama" && nodeA.name == "enemy1" {
             nodeB.removeFromParentNode()
             
-            self.testlab.text = /*nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + "と" + */String(enemyHP)
             
             RedColorNo += 5
             BlueColorNo -= 5
@@ -347,6 +381,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 }
             }
         }
+        
+        if nodeB.name == "enemyTama" && nodeA.name == "player" {
+            nodeB.removeFromParentNode()
+            playerHP -= 10
+            if playerHP <= 0 {
+                testlab.text = "Game Over!!!"
+            }
+        }
+        
         //self.Targets -= 1
     }
     
