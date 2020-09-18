@@ -24,6 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var audioPlayer: AVAudioPlayer!
     
     @IBOutlet weak var shotButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // 再生する audio ファイルのパスを取得
@@ -61,36 +62,36 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // スクリーンの横縦幅
         //let screenWidth:CGFloat = self.view.frame.width
         //let screenHeight:CGFloat = self.view.frame.height
-        shotButton.frame = CGRect(x: 0, y: 0, width: 100, height: 100)  // 1
-               //shotButton.center = self.view.center  // 2
+        shotButton.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        //shotButton.center = self.view.center
         shotButton.layer.position = CGPoint(x: self.view.frame.width/2, y:600)
-               
-        shotButton.backgroundColor = .red  // 3
-        shotButton.setTitleColor(UIColor.white, for: UIControl.State.normal)  // 4
-        
-        shotButton.layer.borderWidth = 1  // 5
-        shotButton.layer.borderColor = UIColor.black.cgColor  // 6
-        
-        shotButton.layer.cornerRadius = 50  // 7
-               
-        shotButton.layer.shadowOffset = CGSize(width: 3, height: 3 )  // 8
-        shotButton.layer.shadowOpacity = 0.5  // 9
-        shotButton.layer.shadowRadius = 10  // 10
-        shotButton.layer.shadowColor = UIColor.gray.cgColor  // 11
+        shotButton.backgroundColor = .red
+        shotButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        shotButton.layer.borderWidth = 1
+        shotButton.layer.borderColor = UIColor.black.cgColor
+        shotButton.layer.cornerRadius = 50
+        shotButton.layer.shadowOffset = CGSize(width: 3, height: 3 )
+        shotButton.layer.shadowOpacity = 0.5
+        shotButton.layer.shadowRadius = 10
+        shotButton.layer.shadowColor = UIColor.gray.cgColor
         
         enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
-        attacker()
+        attacker(enemyDate.enemyPositionX, enemyDate.enemyPositionY, enemyDate.enemyPositionZ)
+        
     }
     
+    lazy var enemyDate = enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
     var Targets = 0
     
-    func enemy(_ positionX: Float,_ positionY: Float,_ positionZ: Float,_ red: Int,_ green: Int,_ blue: Int,_ alpha: Int,_ NodeName: String) {
+    func enemy(_ positionX: Float,_ positionY: Float,_ positionZ: Float,_ red: Int,_ green: Int,_ blue: Int,_ alpha: Int,_ NodeName: String) -> (enemyPositionX: Float, enemyPositionY: Float, enemyPositionZ: Float){
         
         let enemyScene = SCNScene(named: "art.scnassets/target.scn")!
         let enemyNode = enemyScene.rootNode.childNode(withName: "Cylinder", recursively: true)
-        let enemyPosition = SCNVector3(positionX, positionY, positionZ)
+        let enemyPositionX = positionX
+        let enemyPositionY = positionY
+        let enemyPositionZ = positionZ
         
-        enemyNode?.position = enemyPosition
+        enemyNode?.position = SCNVector3(enemyPositionX, enemyPositionY, enemyPositionZ)
         enemyNode?.name = NodeName
         enemyNode?.scale = SCNVector3(0.5, 0.1, 0.5)
         
@@ -124,14 +125,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             )
         )
         sceneView.scene.rootNode.addChildNode(enemyNode!)
+        return (enemyPositionX, enemyPositionY, enemyPositionZ)
     }
 
-    func attacker() {
+    func attacker(_ PositionX: Float,_ PositionY: Float,_ PositionZ: Float) {
         //球体を生成 --rediusは半径
         let attackerObj = SCNSphere(radius: 0.5)
         let attackerNode = SCNNode(geometry: attackerObj)
-        attackerNode.position = SCNVector3(-0, 1.3, -3)
+        let attackerPositionX = PositionX
+        let attackerPositionY = PositionY
+        let attackerPositionZ = PositionZ
+        
+        attackerNode.position = SCNVector3(attackerPositionX, attackerPositionY + 1, attackerPositionZ)
         attackerNode.scale = SCNVector3(0.5, 0.5, 0.5)
+        attackerNode.name = "attacker"
         
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.red
@@ -150,10 +157,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         //Body情報をノードにセット
         attackerNode.physicsBody = sphereBody
         
+        //?秒間かかるアニメーション
+        let attackermoving = SCNAction.move(by: SCNVector3(5, 1.0, -1.5), duration: TimeInterval(3))
+        let attackermoving2 = SCNAction.move(by: SCNVector3(-5, 1.0, -1.5), duration: TimeInterval(3))
+        let attackerstoping = SCNAction.wait(duration: 0.3)
+        attackerNode.runAction(
+            SCNAction.repeatForever(
+                SCNAction.sequence([
+                    attackermoving,
+                    attackermoving.reversed(),
+                    attackerstoping,
+                    attackermoving2,
+                    attackermoving2.reversed(),
+                ])
+            )
+        )
         sceneView.scene.rootNode.addChildNode(attackerNode)
     }
     
+    
     func attacking() {
+        
+        let attackerDate = sceneView.scene.rootNode.childNode(withName: "attacker", recursively: false)
+        let attackingPosition = attackerDate?.presentation.position
         let attackerbullet = SCNSphere(radius: 0.005)
         let attackerbulletNode = SCNNode(geometry: attackerbullet)
         attackerbulletNode.name = "enemyTama"
@@ -174,13 +200,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         attackerBulletBody.contactTestBitMask = 1
         attackerBulletBody.collisionBitMask = 1
         attackerBulletBody.categoryBitMask = 1
-        
         //発射時の弾の位置
-        attackerbulletNode.position = SCNVector3(-0, 1, -2.5)
+        attackerbulletNode.position = attackingPosition!
         //着弾後の弾の位置
-        //let targetPosCamera = SCNVector3Make(0, 0, 7.0)
-        //let target = camera.convertPosition(targetPosCamera, to: nil)
-        
         guard let camera = sceneView.pointOfView else {
             return
         }
@@ -196,9 +218,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.8) {
           attackerbulletNode.removeFromParentNode()
         }
-        
-
-
         //AR空間に球体を追加
         sceneView.scene.rootNode.addChildNode(attackerbulletNode)
     }
@@ -217,30 +236,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         guard let camera = sceneView.pointOfView else {
            return
         }
-        
         //物理情報の設定
         let physicsBullet = SCNPhysicsShape(geometry: bullet, options: nil)
         let BulletBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         BulletBody.restitution = 1
         BulletBody.physicsShape = physicsBullet
         bulletNode.physicsBody?.isAffectedByGravity = false
-        
         //接触を検知する処理
         BulletBody.contactTestBitMask = 1
         BulletBody.collisionBitMask = 1
         BulletBody.categoryBitMask = 1
-        
         //発射時の弾の位置　--カメラの位置
         bulletNode.position = camera.position
         //着弾後の弾の位置
         let targetPosCamera = SCNVector3Make(0, 0, BulletRange)
         let target = camera.convertPosition(targetPosCamera, to: nil)
-        
-        
         //着弾まで?秒間かかるアニメーション
         let action = SCNAction.move(to: target, duration: TimeInterval(BulletVelocity))
         bulletNode.runAction(action)
-        
         //Body情報をノードにセット
         bulletNode.physicsBody = BulletBody
         //AR空間に球体を追加
@@ -262,6 +275,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         ShotType(0.005, "red", -4.5, 1.8)
     }
     
+    
     var timer: Timer?
     @IBAction func TapDown(_ sender: Any) {
         self.timer = Timer.scheduledTimer( //TimerクラスのメソッドなのでTimerで宣言
@@ -281,60 +295,57 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     var RedColorNo = 0
     var BlueColorNo = 255
-    var enemyHP = 52
+    var enemyHP = 82
     //接触を検知したらテキストを表示
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
         
         if nodeB.name == "Tama" && nodeA.name == "enemy1" {
             nodeB.removeFromParentNode()
             
-            self.testlab.text = nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + String(BlueColorNo)
+            self.testlab.text = /*nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + "と" + */String(enemyHP)
             
             RedColorNo += 5
             BlueColorNo -= 5
             nodeA.geometry?.firstMaterial?.diffuse.contents = UIColor.rgba(red: RedColorNo, green: 0, blue: BlueColorNo, alpha: 1)
             enemyHP -= 10
-        }
-        
-        if enemyHP <= 0 {
-        nodeA.removeFromParentNode()
-        
-        var isFirst = true
-        if isFirst {
-            isFirst = false
             
-            let audioPath_EnemyDestruction = Bundle.main.path(forResource: "EnemyDestruction", ofType:"mp3")!
-            let audioUrl = URL(fileURLWithPath: audioPath_EnemyDestruction)
-            // auido を再生するプレイヤーを作成する
-            var audioError:NSError?
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
-            } catch let error as NSError {
-                audioError = error
-                audioPlayer = nil
-            }
-            // エラーが起きたとき
-            if let error = audioError {
-                print("Error \(error.localizedDescription)")
-            }
-            audioPlayer.delegate = self
-            audioPlayer.prepareToPlay()
-            //再生する
-            audioPlayer.play()
-        }
+            if enemyHP <= 0 {
+                nodeA.removeFromParentNode()
+                sceneView.scene.rootNode.childNode(withName: "attacker", recursively: false)?.removeFromParentNode()
             
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-                //Storyboardを指定
-                let Resultstoryboard = UIStoryboard(name: "Result", bundle: nil)
-                //生成するViewControllerを指定
-                let next2 = Resultstoryboard.instantiateViewController(withIdentifier: "ResultViewController")
-                //表示
-                self.present(next2, animated: true)
+            var isFirst = true
+            if isFirst {
+                isFirst = false
+                let audioPath_EnemyDestruction = Bundle.main.path(forResource: "EnemyDestruction", ofType:"mp3")!
+                let audioUrl = URL(fileURLWithPath: audioPath_EnemyDestruction)
+                // auido を再生するプレイヤーを作成する
+                var audioError:NSError?
+                do {
+                    audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
+                } catch let error as NSError {
+                    audioError = error
+                    audioPlayer = nil
+                }
+                // エラーが起きたとき
+                if let error = audioError {
+                    print("Error \(error.localizedDescription)")
+                }
+                audioPlayer.delegate = self
+                audioPlayer.prepareToPlay()
+                //再生する
+                audioPlayer.play()
             }
-            
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+                    //Storyboardを指定
+                    let Resultstoryboard = UIStoryboard(name: "Result", bundle: nil)
+                    //生成するViewControllerを指定
+                    let next2 = Resultstoryboard.instantiateViewController(withIdentifier: "ResultViewController")
+                    //表示
+                    self.present(next2, animated: true)
+                }
+            }
         }
         //self.Targets -= 1
     }
@@ -394,5 +405,3 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         }
     
 }
-
-
