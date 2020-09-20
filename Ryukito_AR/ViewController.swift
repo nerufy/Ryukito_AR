@@ -17,7 +17,6 @@ extension UIColor {
 }
 
 
-
 class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, AVAudioPlayerDelegate{
 
     @IBOutlet var sceneView: ARSCNView!
@@ -76,13 +75,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         shotButton.layer.shadowColor = UIColor.gray.cgColor
         
         player()
+        //renderer(testlab, updateAtTime: 1)
         enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
         attacker(enemyDate.enemyPositionX, enemyDate.enemyPositionY, enemyDate.enemyPositionZ)
         
     }
-    
+    let holding = true
     lazy var enemyDate = enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
     var Targets = 0
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        // このフラグをボタン等で切り替える
+        if holding {
+            guard let camera = sceneView.pointOfView else {
+                return
+            }
+            let cameraPos = SCNVector3Make(0, 0, 0)
+            let position = camera.convertPosition(cameraPos, to: nil)
+            let playerDate = sceneView.scene.rootNode.childNode(withName: "player", recursively: false)
+            playerDate!.position = position
+        }
+    }
     
     func player() {
         let playerObj = SCNSphere(radius: 0.5)
