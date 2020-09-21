@@ -78,8 +78,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         //renderer(testlab, updateAtTime: 1)
         enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
         attacker(enemyDate.enemyPositionX, enemyDate.enemyPositionY, enemyDate.enemyPositionZ)
-        
     }
+    var timerVerification = true
     let holding = true
     lazy var enemyDate = enemy(-0, 1.0, -3, 0, 0, 0, 1, "enemy1")
     var Targets = 0
@@ -95,6 +95,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             let playerDate = sceneView.scene.rootNode.childNode(withName: "player", recursively: false)
             playerDate!.position = position
         }
+    }
+    
+    if timerVerification {
+        self.timer = Timer.scheduledTimer( //TimerクラスのメソッドなのでTimerで宣言
+            timeInterval: 0.3, //処理を行う間隔の秒
+          target: self,  //指定した処理を記述するクラスのインスタンス
+            selector: #selector(self.attacking), //実行されるメソッド名
+          userInfo: nil, //selectorで指定したメソッドに渡す情報
+          repeats: true //処理を繰り返すか否か
+        )
     }
     
     func player() {
@@ -221,7 +231,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     }
     
     
-    func attacking() {
+    @objc func attack(_ BulletVelocity: Float, _ BulletColor: Any) {
         
         let attackerDate = sceneView.scene.rootNode.childNode(withName: "attacker", recursively: false)
         let attackingPosition = attackerDate?.presentation.position
@@ -231,7 +241,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         //マテリアル（表面）を生成する
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.black
+        material.diffuse.contents = BulletColor
         attackerbullet.materials = [material]
         
         //物理情報の設定
@@ -252,7 +262,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             return
         }
         //着弾まで?秒間かかるアニメーション
-        let action = SCNAction.move(to: camera.position, duration: TimeInterval(1.8))
+        let action = SCNAction.move(to: camera.position, duration: TimeInterval(BulletVelocity))
         attackerbulletNode.runAction(action)
         
         //Body情報をノードにセット
@@ -267,6 +277,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene.rootNode.addChildNode(attackerbulletNode)
     }
     
+    @objc func attacking() {
+        let random = Int.random(in: 0 ... 10)
+        if random <= 2 {
+            attack(1.8, UIColor.black)
+        } else if random == 0 {
+            var count = 0
+            while count < 3 {
+                count += 1
+                self.timer = Timer.scheduledTimer( //TimerクラスのメソッドなのでTimerで宣言
+                    timeInterval: 0.2, //処理を行う間隔の秒
+                  target: self,  //指定した処理を記述するクラスのインスタンス
+                    selector: #selector(self.attack), //実行されるメソッド名
+                    userInfo: 0.9, //selectorで指定したメソッドに渡す情報
+                  repeats: false //処理を繰り返すか否か
+                )
+            }
+        } else if random == 10 {
+            attack(1.35, UIColor.red)
+        }
+        testlab.text = String(random)
+    }
+    
     
     @objc func ShotType(_ BulletSize: Float,_ BulletColor: Any,_ BulletRange: Float,_ BulletVelocity: Double) {
         //弾を生成 --rediusは半径
@@ -276,7 +308,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         //マテリアル（表面）を生成する
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.black
+        material.diffuse.contents = BulletColor
         bullet.materials = [material]
         guard let camera = sceneView.pointOfView else {
            return
@@ -312,12 +344,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     // ボタンを押すと弾を発射 --ハンドガン
     @IBAction func shot(_ sender: Any) {
-        ShotType(0.005, "black", -7.0, 1.8)
-        attacking()
+        ShotType(0.005, UIColor.black, -7.0, 1.8)
     }
     // ボタンを押すと弾を発射 --マシンガン
     @objc func MachineGun () {
-        ShotType(0.005, "red", -4.5, 1.8)
+        ShotType(0.005, UIColor.red, -4.5, 1.8)
     }
     
     
@@ -347,7 +378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
         
-        self.testlab.text = nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + "と"
+        //self.testlab.text = nodeB.name! + " が " + nodeA.name! + " に当たった！!！ " + "と"
         
         if nodeB.name == "Tama" && nodeA.name == "enemy1" {
             nodeB.removeFromParentNode()
@@ -361,6 +392,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             if enemyHP <= 0 {
                 nodeA.removeFromParentNode()
                 sceneView.scene.rootNode.childNode(withName: "attacker", recursively: false)?.removeFromParentNode()
+                self.timerVerification = false
             
             var isFirst = true
             if isFirst {
