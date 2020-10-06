@@ -7,8 +7,7 @@
 //
 
 import UIKit
-
-class ResultViewController: UIViewController {
+class ResultViewController: SuperModeViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,15 +17,9 @@ class ResultViewController: UIViewController {
     
     
     
-    @IBAction func GoMenu(_ sender: Any) {
-        //Storyboardを指定
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //生成するViewControllerを指定
-        let next = storyboard.instantiateViewController(withIdentifier: "MenuViewController")
-        //表示
-        self.present(next, animated: true)
+    @IBAction func didTapMainButton(_ sender: Any) {
+        super.goToViewController(storyboardName: "Main", ViewControllerIdentifier: "Main")
     }
-    
 
     /*
     // MARK: - Navigation

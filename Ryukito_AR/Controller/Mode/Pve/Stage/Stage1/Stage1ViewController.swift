@@ -17,7 +17,7 @@ extension UIColor {
 }
 
 
-class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, AVAudioPlayerDelegate{
+class Stage1ViewController: SuperStageViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, AVAudioPlayerDelegate{
 
     @IBOutlet var sceneView: ARSCNView!
     var audioPlayer: AVAudioPlayer!
@@ -27,7 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     override func viewDidLoad() {
         super.viewDidLoad()
         // 再生する audio ファイルのパスを取得
-        let audioPath = Bundle.main.path(forResource: "kinkyu", ofType:"mp3")!
+        let audioPath = Bundle.main.path(forResource: "Resource/kinkyu", ofType:"mp3")!
         let audioUrl = URL(fileURLWithPath: audioPath)
         // auido を再生するプレイヤーを作成する
         var audioError:NSError?
@@ -97,15 +97,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         }
     }
     
-    if timerVerification {
-        self.timer = Timer.scheduledTimer( //TimerクラスのメソッドなのでTimerで宣言
-            timeInterval: 0.3, //処理を行う間隔の秒
-          target: self,  //指定した処理を記述するクラスのインスタンス
-            selector: #selector(self.attacking), //実行されるメソッド名
-          userInfo: nil, //selectorで指定したメソッドに渡す情報
-          repeats: true //処理を繰り返すか否か
-        )
-    }
+//    if timerVerification {
+//        self.timer = Timer.scheduledTimer( //TimerクラスのメソッドなのでTimerで宣言
+//            timeInterval: 0.3, //処理を行う間隔の秒
+//          target: self,  //指定した処理を記述するクラスのインスタンス
+//            selector: #selector(self.attacking), //実行されるメソッド名
+//          userInfo: nil, //selectorで指定したメソッドに渡す情報
+//          repeats: true //処理を繰り返すか否か
+//        )
+//    }
     
     func player() {
         let playerObj = SCNSphere(radius: 0.5)
@@ -397,7 +397,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             var isFirst = true
             if isFirst {
                 isFirst = false
-                let audioPath_EnemyDestruction = Bundle.main.path(forResource: "EnemyDestruction", ofType:"mp3")!
+                let audioPath_EnemyDestruction = Bundle.main.path(forResource: "Resource/EnemyDestruction", ofType:"mp3")!
                 let audioUrl = URL(fileURLWithPath: audioPath_EnemyDestruction)
                 // auido を再生するプレイヤーを作成する
                 var audioError:NSError?
@@ -417,12 +417,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 audioPlayer.play()
             }
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-                    //Storyboardを指定
-                    let Resultstoryboard = UIStoryboard(name: "Result", bundle: nil)
-                    //生成するViewControllerを指定
-                    let next2 = Resultstoryboard.instantiateViewController(withIdentifier: "ResultViewController")
-                    //表示
-                    self.present(next2, animated: true)
+                    super.goToViewController(storyboardName: "Result", ViewControllerIdentifier: "ResultViewController")
                 }
             }
         }
